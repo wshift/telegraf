@@ -1,0 +1,19 @@
+{
+  "name": "telegraf-automobot",
+  "version": "1.0.0",
+  "description": "telegram bot for automobot.net",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "nodemon index.js"
+  },
+  "author": "shift",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.1",
+    "sequelize": "^6.12.0-alpha.1",
+    "telegraf": "^3.38.0"
+  }
+}
