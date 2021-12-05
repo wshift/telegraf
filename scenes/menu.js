@@ -7,7 +7,7 @@ const menuScreen = {
 		const text = ctx.message ? ctx.message.text : null;
 		if (text === '⭐️ Мои авто') {
 			ctx.reply(
-				'Инфа про авто',
+				'Доделаю в 12.12.2222 году',
 				Markup.keyboard([['⭐️ Мои авто']])
 					.oneTime()
 					.resize()

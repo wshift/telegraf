@@ -75,10 +75,15 @@ const startScreen = {
 							Extra.markup(Markup.inlineKeyboard([Markup.urlButton('Зарегистрировать авто 🌐', buttonUrl)]))
 						);
 					} else {
-						user.phone = null;
-						ctx.reply('Упс, случилась непредвиденная ошибка в момент регистрации. Пожалуйста, повторите процедуру с начала 😅');
-						nextScene = { nextScene: SCENES.START, nextStep: STEPS.FIRST };
-						console.error(`Error at req: ${JSON.stringify(data)}`);
+						ctx.reply(`Рад видеть вас снова, ${user.name}`);
+						ctx.reply(
+							'Главное меню',
+							Markup.keyboard([['⭐️ Мои авто']])
+								.oneTime()
+								.resize()
+								.extra()
+						);
+						return { nextScene: SCENES.MENU, nextStep: STEPS.FIRST };
 					}
 				})
 				.catch((err) => {
