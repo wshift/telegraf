@@ -29,7 +29,6 @@ const startScreen = {
 			ctx.reply(
 				'Главное меню',
 				Markup.keyboard([['⭐️ Мои авто']])
-					.oneTime()
 					.resize()
 					.extra()
 			);
@@ -79,7 +78,6 @@ const startScreen = {
 						await ctx.reply(
 							'Главное меню',
 							Markup.keyboard([['⭐️ Мои авто']])
-								.oneTime()
 								.resize()
 								.extra()
 						);
