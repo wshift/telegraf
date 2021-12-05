@@ -88,7 +88,7 @@ const startScreen = {
 			return nextScene;
 		}
 	},
-	[STEPS.SECOND]: async function ({ ctx, user }) {
+	[STEPS.THIRD]: async function ({ ctx, user }) {
 		//do webhook
 	},
 };
