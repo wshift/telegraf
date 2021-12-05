@@ -37,7 +37,7 @@ const startScreen = {
 		return { nextScene: SCENES.MENU, nextStep: STEPS.FIRST };
 	},
 	[STEPS.SECOND]: async function ({ ctx, user }) {
-		const phone = ctx.message?.contact?.phone_number;
+		const phone = ctx.message ? (ctx.message.contact ? ctx.message.contact.phone_number : null) : null;
 		if (!phone) {
 			ctx.reply(
 				'Пожалуйста, нажмите на кнопку номера',

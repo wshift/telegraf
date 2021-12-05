@@ -4,7 +4,7 @@ const Markup = require('telegraf/markup');
 
 const menuScreen = {
 	[STEPS.FIRST]: async function ({ ctx, user }) {
-		const text = ctx.message?.text;
+		const text = ctx.message ? ctx.message.text : null;
 		if (text === '⭐️ Мои авто') {
 			ctx.reply(
 				'Инфа про авто',

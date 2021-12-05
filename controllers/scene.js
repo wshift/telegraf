@@ -12,7 +12,7 @@ class Scene {
 		try {
 			//executing
 			const isScene = scenes.hasOwnProperty(scene);
-			const isStep = isScene ? scenes?.[scene]?.[step] : false;
+			const isStep = isScene ? (scenes[scene] ? scenes[scene][step] : false) : false;
 			if (isScene && isStep) {
 				this.ctx = ctx;
 				this.scene = scene;
