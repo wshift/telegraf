@@ -75,8 +75,8 @@ const startScreen = {
 							Extra.markup(Markup.inlineKeyboard([Markup.urlButton('Зарегистрировать авто 🌐', buttonUrl)]))
 						);
 					} else {
-						ctx.reply(`Рад видеть вас снова, ${user.name}`);
-						ctx.reply(
+						await ctx.reply(`Рад видеть вас снова, ${user.name}`);
+						await ctx.reply(
 							'Главное меню',
 							Markup.keyboard([['⭐️ Мои авто']])
 								.oneTime()
