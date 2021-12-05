@@ -6,8 +6,9 @@ class Scene {
 		this.ctx = null;
 		this.scene = null;
 		this.step = null;
+		this.user = null;
 	}
-	async run(ctx, scene, step) {
+	async run(ctx, scene, step, user) {
 		try {
 			//executing
 			const isScene = scenes.hasOwnProperty(scene);
@@ -16,6 +17,7 @@ class Scene {
 				this.ctx = ctx;
 				this.scene = scene;
 				this.step = step;
+				this.user = user;
 				return await scenes[scene][step](this);
 			} else if (!isStep) {
 				ctx.reply(`No step ${step} in ${scene}`);

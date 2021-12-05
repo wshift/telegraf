@@ -3,6 +3,7 @@ const { Telegraf, Markup } = require('telegraf');
 const sequelize = require('./db');
 const User = require('./controllers/user');
 const Scene = require('./controllers/scene');
+const { SCENES, STEPS } = require('./constants');
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -20,10 +21,13 @@ const bot = new Telegraf(token);
 		console.log('Db connection problem => ', err);
 	}
 	bot.on('message', async (ctx, next) => {
-		ctx.reply();
 		const user = await User.get(ctx);
-		const { scene, step } = { ...user.dataValues };
-		const { nextStep, nextScene } = await Scene.run(ctx, scene, step);
+		let { scene, step } = { ...user.dataValues };
+		if (ctx.message.text && ctx.message.text.includes('/start')) {
+			scene = SCENES.START;
+			step = STEPS.FIRST;
+		}
+		const { nextStep, nextScene } = await Scene.run(ctx, scene, step, user);
 		await User.update(user, nextStep, nextScene);
 	});
 })();
