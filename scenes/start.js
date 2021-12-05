@@ -78,6 +78,7 @@ const startScreen = {
 						user.phone = null;
 						ctx.reply('Упс, случилась непредвиденная ошибка в момент регистрации. Пожалуйста, повторите процедуру с начала 😅');
 						nextScene = { nextScene: SCENES.START, nextStep: STEPS.FIRST };
+						console.error(`Error at req: ${JSON.stringify(data)}`);
 					}
 				})
 				.catch((err) => {
@@ -85,6 +86,7 @@ const startScreen = {
 					ctx.reply(
 						'Упс, случилась непредвиденная ошибка в момент обработки запроса. Пожалуйста, повторите процедуру с начала 😅'
 					);
+					console.error(`Error at req: ${JSON.stringify(err)}`);
 					nextScene = { nextScene: SCENES.START, nextStep: STEPS.FIRST };
 				});
 			return nextScene;
