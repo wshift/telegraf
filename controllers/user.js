@@ -1,9 +1,10 @@
 const { UserModel } = require('../models/index');
 
 class User {
-	async get(ctx) {
+	async get(ctx, id = false) {
 		try {
-			const chatId = ctx.message.from.id.toString();
+			const chatId = id || ctx.message.from.id.toString();
+			console.log(`🚀 ~ file: user.js ~ line 7 ~ User ~ get ~ chatId`, chatId);
 			let user = await UserModel.findOne({ where: { chatId } });
 			if (!user) {
 				user = await UserModel.create({

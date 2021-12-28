@@ -1,11 +1,16 @@
 require('dotenv').config();
-const { Telegraf, Markup } = require('telegraf');
+const express = require('express');
 const sequelize = require('./db');
+const cors = require('cors');
+const app = express();
+const router = require('./routes/index');
+const token = process.env.BOT_TOKEN;
+
+const { Telegraf, Markup } = require('telegraf');
 const User = require('./controllers/user');
 const Scene = require('./controllers/scene');
 const { SCENES, STEPS } = require('./constants');
 
-const token = process.env.BOT_TOKEN;
 if (token === undefined) {
 	throw new Error('BOT_TOKEN must be provided!');
 }
@@ -17,6 +22,10 @@ const bot = new Telegraf(token);
 		//db connect
 		await sequelize.authenticate();
 		await sequelize.sync({ alter: true });
+		app.use(cors());
+		app.use(express.json());
+		app.use('/api/v1', router);
+		app.listen(3001, () => console.log(`Server started, port: 3001`));
 	} catch (err) {
 		console.log('Db connection problem => ', err);
 	}

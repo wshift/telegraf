@@ -1,6 +1,7 @@
 const SCENES = {
 	START: 'START',
 	MENU: 'MENU',
+	MILEAGE: 'MILEAGE',
 };
 
 const STEPS = {
