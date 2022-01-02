@@ -26,7 +26,7 @@ class Scene {
 			}
 			return { nextStep: step, nextScene: scene };
 		} catch (e) {
-			console.error(e);
+			console.error(`Error: ${e}, add info: ${ctx, scene, step, user}`);
 		}
 	}
 }

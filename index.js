@@ -26,23 +26,24 @@ const bot = new Telegraf(token);
 		app.use(express.json());
 		app.use('/api/v1', router);
 		app.listen(3001, () => console.log(`Server started, port: 3001`));
+
+		bot.launch();
+
+		// Enable graceful stop
+		process.once('SIGINT', () => bot.stop('SIGINT'));
+		process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+		bot.on('message', async (ctx, next) => {
+			const user = await User.get(ctx);
+			let { scene, step } = { ...user.dataValues };
+			if (ctx.message.text && ctx.message.text.includes('/start')) {
+				scene = SCENES.START;
+				step = STEPS.FIRST;
+			}
+			const { nextStep, nextScene } = await Scene.run(ctx, scene, step, user);
+			await User.update(user, nextStep, nextScene);
+		});
 	} catch (err) {
-		console.log('Db connection problem => ', err);
+		console.log('[INDEX.JS Error] => ', err);
 	}
-	bot.on('message', async (ctx, next) => {
-		const user = await User.get(ctx);
-		let { scene, step } = { ...user.dataValues };
-		if (ctx.message.text && ctx.message.text.includes('/start')) {
-			scene = SCENES.START;
-			step = STEPS.FIRST;
-		}
-		const { nextStep, nextScene } = await Scene.run(ctx, scene, step, user);
-		await User.update(user, nextStep, nextScene);
-	});
 })();
-
-bot.launch();
-
-// Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));

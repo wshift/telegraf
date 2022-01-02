@@ -18,4 +18,18 @@ router.post('/ask-mileage', async (req, res) => {
 	}
 });
 
+router.get('/finish-reg', async (req, res) => {
+	const user = await User.get(null, req.query.chatId);
+	const body = req.body;
+	if (user) {
+		user.data = { ...user.data, ...body };
+		const nextScene = SCENES.MENU;
+		const nextStep = STEPS.FIRST;
+		await User.update(user, nextStep, nextScene);
+		res.json({ status: true }).send();
+	} else {
+		res.json({ status: false, error: 'Wrong userId' }).send();
+	}
+});
+
 module.exports = router;
