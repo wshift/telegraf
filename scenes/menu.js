@@ -24,19 +24,29 @@ const menuScreen = {
 				headers: { 'Content-Type': 'application/json' },
 			});
 			const { cars } = await res.json();
-			cars.forEach((car, index) => {
-				let content = `ℹ️ ${car.brand} ${car.model}(${car.manufactured_year})\n`;
-				content += `Зарегистрирована: ${car.createdAt.split('T')[0]}\n`;
-				content += `VIN: ${car.vincode}\n`;
-				content += `Пробег: ${car.current_mileage}\n`;
+			if (cars.length) {
+				cars.forEach((car, index) => {
+					let content = `ℹ️ ${car.brand} ${car.model}(${car.manufactured_year})\n`;
+					content += `Зарегистрирована: ${car.createdAt.split('T')[0]}\n`;
+					content += `VIN: ${car.vincode}\n`;
+					content += `Пробег: ${car.current_mileage}\n`;
+					ctx.reply(
+						content,
+						Markup.keyboard([['⭐️ Мои авто']])
+							.oneTime()
+							.resize()
+							.extra()
+					);
+				});
+			} else {
 				ctx.reply(
-					content,
+					`Список ваших авто пуст, пожалуйста, пройдите регистрацию`,
 					Markup.keyboard([['⭐️ Мои авто']])
 						.oneTime()
 						.resize()
 						.extra()
 				);
-			});
+			}
 			// const keyboard = sliceIntoChunks(data.cars, 2);
 			// ctx.reply(`Ваши авто:`, Markup.keyboard(keyboard).oneTime().resize().extra());
 		} else {
