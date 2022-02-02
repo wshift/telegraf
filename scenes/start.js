@@ -5,7 +5,8 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 
 const startScreen = {
 	[STEPS.FIRST]: async function ({ ctx, user }) {
-		const deeplink = ctx.message.text && ctx.message.text.split(' ').length > 1 ? ctx.message.text.split(' ')[1] : false;
+		const isText = ctx.message.text ? true : false;
+		const deeplink = isText && ctx.message.text.split(' ').length > 1 ? ctx.message.text.split(' ')[1] : false;
 		// if (!user.phone && deeplink) {
 		if (deeplink) {
 			user.company_hash = deeplink;
