@@ -40,7 +40,7 @@ const bot = new Telegraf(token);
 				scene = SCENES.START;
 				step = STEPS.FIRST;
 			}
-			const { nextStep, nextScene } = await Scene.run(ctx, scene, step, user);
+			const { nextStep = STEPS.FIRST, nextScene = SCENES.START } = await Scene.run(ctx, scene, step, user);
 			await User.update(user, nextStep, nextScene);
 		});
 	} catch (err) {
