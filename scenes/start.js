@@ -70,7 +70,7 @@ const startScreen = {
 				.then((res) => res.json())
 				.then(async (data) => {
 					if (data.hash) {
-						const buttonUrl = `${process.env.SITE_URL}/driver-registration/?id=${data.hash}`;
+						const buttonUrl = `${process.env.SITE_URL}/driver-registration/?id=${data.hash}&messenger=telegram`;
 						ctx.reply(
 							'Для завершения регистрации, заполните форму о вашем авто ⬇️',
 							Extra.markup(Markup.inlineKeyboard([Markup.urlButton('Зарегистрировать авто 🌐', buttonUrl)]))
