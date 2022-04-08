@@ -1,12 +1,12 @@
-const { SCENES, STEPS } = require('../constants');
+const { SCENES, STEPS, TEXT } = require('../constants');
 const Extra = require('telegraf/extra');
 const Markup = require('telegraf/markup');
 const e = require('express');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const textLocalization = require('../utils/textLocalization');
 
 const mileageScreen = {
 	[STEPS.FIRST]: async function ({ ctx, user }) {
-		console.log(`🚀 ~ file: mileage.js ~ line 9 ~ user`, user);
 		const text = ctx.message.text;
 		const regex = /\d+/;
 		const userInput = text.match(regex);
@@ -20,17 +20,17 @@ const mileageScreen = {
 				body: JSON.stringify({ current_mileage: newMileage }),
 			});
 			ctx.reply(
-				'Спасибо за информацию!',
-				Markup.keyboard([['⭐️ Мои авто']])
+				textLocalization(TEXT.THANKS),
+				Markup.keyboard([[textLocalization(TEXT.CARS_BTN)]])
 					.resize()
 					.extra()
 			);
 			return { nextScene: SCENES.MENU, nextStep: STEPS.FIRST };
 		} else if (newMileage && newMileage < current_mileage) {
-			ctx.reply('Пожалуйста, введите корректную информацию о пробеге вашего авто👇');
+			ctx.reply(textLocalization(TEXT.LOW_MILAGE));
 			return { nextScene: SCENES.MILEAGE, nextStep: STEPS.FIRST };
 		} else {
-			ctx.reply('Пожалуйста, введите пробег авто, только цифры, к примеру 14800 👇');
+			ctx.reply(textLocalization(TEXT.TEXT_INSTEAD_MILEAGE));
 			return { nextScene: SCENES.MILEAGE, nextStep: STEPS.FIRST };
 		}
 	},

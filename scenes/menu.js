@@ -1,7 +1,8 @@
-const { SCENES, STEPS } = require('../constants');
+const { SCENES, STEPS, TEXT } = require('../constants');
 const Extra = require('telegraf/extra');
 const Markup = require('telegraf/markup');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const textLocalization = require('../utils/textLocalization');
 
 // function sliceIntoChunks(arr, chunkSize) {
 // 	arr = arr.map((car) => `${car.brand} ${car.model}(${car.manufactured_year})`);
@@ -18,21 +19,21 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 const menuScreen = {
 	[STEPS.FIRST]: async function ({ ctx, user }) {
 		const text = ctx.message ? ctx.message.text : null;
-		if (text === '⭐️ Мои авто') {
+		if (text === textLocalization(TEXT.CARS_BTN)) {
 			const res = await fetch(`${process.env.BACKEND_URL}/customers/${user.chatId}/cars`, {
 				method: 'GET',
 				headers: { 'Content-Type': 'application/json' },
 			});
 			const { cars } = await res.json();
 			if (cars.length) {
-				cars.forEach((car, index) => {
+				cars.forEach((car) => {
 					let content = `ℹ️ ${car.brand} ${car.model}(${car.manufactured_year})\n`;
-					content += `Зарегистрирована: ${car.createdAt.split('T')[0]}\n`;
-					content += `VIN: ${car.vincode}\n`;
-					content += `Пробег: ${car.current_mileage}\n`;
+					content += `${textLocalization(TEXT.CAR_REG_DATE)} ${car.createdAt.split('T')[0]}\n`;
+					content += `${textLocalization(TEXT.CAR_VIN)} ${car.vincode}\n`;
+					content += `${textLocalization(TEXT.CAR_MILEAGE)} ${car.current_mileage}\n`;
 					ctx.reply(
 						content,
-						Markup.keyboard([['⭐️ Мои авто']])
+						Markup.keyboard([[textLocalization(TEXT.CARS_BTN)]])
 							.oneTime()
 							.resize()
 							.extra()
@@ -40,8 +41,8 @@ const menuScreen = {
 				});
 			} else {
 				ctx.reply(
-					`Список ваших авто пуст, пожалуйста, пройдите регистрацию`,
-					Markup.keyboard([['⭐️ Мои авто']])
+					textLocalization(TEXT.NO_CARS),
+					Markup.keyboard([[textLocalization(TEXT.CARS_BTN)]])
 						.oneTime()
 						.resize()
 						.extra()
@@ -51,8 +52,8 @@ const menuScreen = {
 			// ctx.reply(`Ваши авто:`, Markup.keyboard(keyboard).oneTime().resize().extra());
 		} else {
 			ctx.reply(
-				'Не понял команду',
-				Markup.keyboard([['⭐️ Мои авто']])
+				textLocalization(TEXT.UNKNOWN_COMMAND),
+				Markup.keyboard([[textLocalization(TEXT.CARS_BTN)]])
 					.oneTime()
 					.resize()
 					.extra()

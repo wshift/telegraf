@@ -1,7 +1,8 @@
-const { SCENES, STEPS } = require('../constants');
+const { SCENES, STEPS, TEXT } = require('../constants');
 const Extra = require('telegraf/extra');
 const Markup = require('telegraf/markup');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const textLocalization = require('../utils/textLocalization');
 
 const startScreen = {
 	[STEPS.FIRST]: async function ({ ctx, user }) {
@@ -12,25 +13,24 @@ const startScreen = {
 			user.company_hash = deeplink;
 			await user.save();
 			ctx.reply(
-				'Меня зовут Automobot 😎\n\nМоя цель — помочь тебе вовремя обслужить свою машину. Всё что тебе нужно сделать — добавить своё авто. Погнали? 🔥',
+				textLocalization(TEXT.REG_TEXT),
 				Extra.markup((markup) => {
 					return markup
 						.resize()
-						.keyboard([markup.contactRequestButton('Зарегистрироваться ✅')])
+						.keyboard([markup.contactRequestButton(textLocalization(TEXT.REG_BTN))])
 						.oneTime()
 						.resize();
 				})
 			);
 			return { nextScene: SCENES.START, nextStep: STEPS.SECOND };
 		} else if (!user.phone && !deeplink) {
-			ctx.replyWithVideo(`https://i.imgur.com/0ArgQXc.mp4`, {
-				caption:
-					'Чтобы начать пользоваться ботом, обратитесь в автосервис, на котором вы обслуживаете свой автомобиль!\n\nВ случае, если у них нет Automobot - расскажите о нем!\n\nC уважением, команда Automobot.net',
+			ctx.replyWithVideo('https://automobot.net/qr-manual.mp4', {
+				caption: textLocalization(TEXT.START_RULES),
 			});
 		} else {
 			ctx.reply(
-				'Главное меню',
-				Markup.keyboard([['⭐️ Мои авто']])
+				textLocalization(TEXT.MAIN_MENU),
+				Markup.keyboard([[textLocalization(TEXT.CARS_BTN)]])
 					.resize()
 					.extra()
 			);
@@ -41,11 +41,11 @@ const startScreen = {
 		const phone = ctx.message ? (ctx.message.contact ? ctx.message.contact.phone_number : null) : null;
 		if (!phone) {
 			ctx.reply(
-				'Пожалуйста, нажмите на кнопку номера',
+				textLocalization(TEXT.PRESS_SHARE_BNT),
 				Extra.markup((markup) => {
 					return markup
 						.resize()
-						.keyboard([markup.contactRequestButton('Зарегистрироваться ✅')])
+						.keyboard([markup.contactRequestButton(textLocalization(TEXT.REG_BTN))])
 						.oneTime()
 						.resize();
 				})
@@ -72,14 +72,14 @@ const startScreen = {
 					if (data.hash) {
 						const buttonUrl = `${process.env.SITE_URL}/driver-registration/?id=${data.hash}&messenger=telegram`;
 						ctx.reply(
-							'Для завершения регистрации, заполните форму о вашем авто ⬇️',
-							Extra.markup(Markup.inlineKeyboard([Markup.urlButton('Зарегистрировать авто 🌐', buttonUrl)]))
+							textLocalization(TEXT.COMPLETE_REG),
+							Extra.markup(Markup.inlineKeyboard([Markup.urlButton(textLocalization(TEXT.COMPLETE_REG_BTN), buttonUrl)]))
 						);
 					} else {
-						await ctx.reply(`Рад видеть вас снова, ${user.name}`);
+						await ctx.reply(textLocalization(TEXT.REENTER_GREETING) + user.name);
 						await ctx.reply(
-							'Главное меню',
-							Markup.keyboard([['⭐️ Мои авто']])
+							textLocalization(TEXT.MAIN_MENU),
+							Markup.keyboard([[textLocalization(TEXT.CARS_BTN)]])
 								.resize()
 								.extra()
 						);
@@ -88,10 +88,8 @@ const startScreen = {
 				})
 				.catch((err) => {
 					user.phone = null;
-					ctx.reply(
-						'Упс, случилась непредвиденная ошибка в момент обработки запроса. Пожалуйста, повторите процедуру с начала 😅'
-					);
-					console.error(`Error at req: ${JSON.stringify(err)}`);
+					ctx.reply(textLocalization(TEXT.ERROR_TEXT));
+					console.log(`🚀 ~ file: start.js ~ line 89 ~ err`, JSON.stringify(err));
 					nextScene = { nextScene: SCENES.START, nextStep: STEPS.FIRST };
 				});
 			return nextScene;
