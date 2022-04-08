@@ -10,7 +10,7 @@ module.exports = textLocalization = (phrase, lang = 'ua', args = {}) => {
 	}
 	//replace them
 	varsToReplace.forEach((variable) => {
-		outputText = outputtextLocalization(TEXT.replace(`{{${variable}}}`, args[variable]);
+		outputText = outputText.replace(`{{${variable}}}`, args[variable]);
 	});
 
 	return outputText;
